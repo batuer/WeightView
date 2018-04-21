@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -119,7 +120,16 @@ public class WeightView extends ViewGroup {
 
   private void measureVertical(int widthMeasureSpec, int heightMeasureSpec) {
     int count = getChildCount();
+    ViewGroup.LayoutParams shelfParams = getLayoutParams();
+
+    if (shelfParams.width == 0 && )
+
     int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+
+
+
+
+    Log.w("Fire", "WeightView:121行:" + heightSize + ":" + MeasureSpec.getSize(widthMeasureSpec));
     int usableHeight = heightSize - mTopBorder - mBottomBorder - (count - 1) * mChildGap;
     int maxChildWidth = 0;
     for (int i = 0; i < count; i++) {
