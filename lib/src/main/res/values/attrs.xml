@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <declare-styleable name="WeightView">
+    <attr name="weight_total" format="integer" />
+    <attr name="border" format="dimension" />
+    <attr name="top_border" format="dimension" />
+    <attr name="left_border" format="dimension" />
+    <attr name="right_border" format="dimension" />
+    <attr name="bottom_border" format="dimension" />
+    <attr name="child_gap" format="dimension" />
+    <attr name="orientation">
+      <flag name="horizontal" value="0" />
+      <flag name="vertical" value="1" />
+    </attr>
+    <attr name="border_color" format="color" />
+    <attr name="gap_color" format="color" />
+  </declare-styleable>
+
+  <declare-styleable name="WeightChildView">
+    <attr name="weight" format="integer" />
+    <attr name="vertical_gravity">
+      <flag name="center" value="0" />
+      <flag name="top" value="1" />
+      <flag name="bottom" value="2" />
+    </attr>
+
+    <attr name="horizontal_gravity">
+      <flag name="center" value="0" />
+      <flag name="left" value="3" />
+      <flag name="right" value="4" />
+    </attr>
+  </declare-styleable>
+</resources>

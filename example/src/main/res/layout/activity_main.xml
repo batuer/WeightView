@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+  <com.gusi.weight.WeightView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="1dp"
+      app:border="5dp"
+      app:border_color="#33000000"
+
+      app:orientation="horizontal"
+      app:weight_total="10">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#a23123"
+        android:text="1"
+        app:weight="2" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#a12234"
+        android:text="22222222"
+        app:weight="1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#989345"
+        android:text="33"
+        app:vertical_gravity="top"
+        app:weight="5" />
+
+
+
+  </com.gusi.weight.WeightView>
+
+  <android.support.v7.widget.RecyclerView
+      android:id="@+id/rcv"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="2dp" />
+
+  <com.gusi.weight.WeightView
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_margin="5dp"
+      android:background="#22000000"
+      app:orientation="vertical"
+      app:weight_total="10">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#233"
+        android:text="111"
+        app:weight="2" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#989"
+        android:text="222111"
+        app:weight="3" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#a54"
+        android:text="333111"
+        app:weight="2" />
+
+
+
+
+  </com.gusi.weight.WeightView>
+</LinearLayout>
