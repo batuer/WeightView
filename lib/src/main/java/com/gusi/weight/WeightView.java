@@ -104,6 +104,7 @@ public class WeightView extends ViewGroup {
   }
 
   @Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    //resolveSize()
     if (mWeightTotal <= 0) {
       setMeasuredDimension(0, 0);
     } else if (mOrientation == HORIZONTAL
@@ -119,43 +120,79 @@ public class WeightView extends ViewGroup {
 
   private void measureVertical(int widthMeasureSpec, int heightMeasureSpec) {
     int count = getChildCount();
-    int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-    int usableHeight = heightSize - mTopBorder - mBottomBorder - (count - 1) * mChildGap;
+    int mHSize = MeasureSpec.getSize(heightMeasureSpec);
+    int totalChildMarginAndPaddingHeight = getPaddingBottom() + getPaddingTop();
+    for (int i = 0; i < count; i++) {
+      View child = getChildAt(i);
+      LayoutParams params = (LayoutParams) child.getLayoutParams();
+      totalChildMarginAndPaddingHeight += params.topMargin;
+      totalChildMarginAndPaddingHeight += params.bottomMargin;
+    }
+
+    int usableHSize = mHSize - mTopBorder - mBottomBorder - (count - 1) * mChildGap
+        - totalChildMarginAndPaddingHeight;
+    if (usableHSize <= 0) {
+      setMeasuredDimension(0, 0);
+      return;
+    }
+
     int maxChildWidth = 0;
     for (int i = 0; i < count; i++) {
       View child = getChildAt(i);
       LayoutParams params = (LayoutParams) child.getLayoutParams();
-      int childHeight = (int) (usableHeight * (float) params.weight / mWeightTotal + 0.5f);
+      int childHeight = (int) (usableHSize * (float) params.weight / mWeightTotal + 0.5f);
       int heightSpec = MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.EXACTLY);
-      int widthSpec = widthMeasureSpec;
+      int widthSpec = MeasureSpec.makeMeasureSpec(
+          MeasureSpec.getSize(widthMeasureSpec) - mLeftBorder - mRightBorder - getPaddingLeft()
+              - getPaddingRight(), MeasureSpec.getMode(widthMeasureSpec));
       if (params.width != LayoutParams.MATCH_PARENT && params.width != LayoutParams.WRAP_CONTENT) {
         widthSpec = MeasureSpec.makeMeasureSpec(params.width, MeasureSpec.EXACTLY);
       }
       child.measure(widthSpec, heightSpec);
-      maxChildWidth = Math.max(maxChildWidth, child.getMeasuredWidth());
+      maxChildWidth = Math.max(maxChildWidth,
+          child.getMeasuredWidth() + params.leftMargin + params.rightMargin);
     }
-    setMeasuredDimension(maxChildWidth + mLeftBorder + mRightBorder, heightSize);
+    setMeasuredDimension(
+        maxChildWidth + mLeftBorder + mRightBorder + getPaddingLeft() + getPaddingRight(), mHSize);
   }
 
   private void measureHorizontal(int widthMeasureSpec, int heightMeasureSpec) {
     int count = getChildCount();
-    int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-    int usableWidth = widthSize - mLeftBorder - mRightBorder - (count - 1) * mChildGap;
+    int mWSize = MeasureSpec.getSize(widthMeasureSpec);
+
+    int totalChildMarginAndPaddingWidth = getPaddingLeft() + getPaddingRight();
+    for (int i = 0; i < count; i++) {
+      View child = getChildAt(i);
+      LayoutParams params = (LayoutParams) child.getLayoutParams();
+      totalChildMarginAndPaddingWidth += params.leftMargin;
+      totalChildMarginAndPaddingWidth += params.rightMargin;
+    }
+    int usableWidth = mWSize - mLeftBorder - mRightBorder - (count - 1) * mChildGap
+        - totalChildMarginAndPaddingWidth;
+    if (usableWidth <= 0) {
+      setMeasuredDimension(0, 0);
+      return;
+    }
+
     int maxChildHeight = 0;
     for (int i = 0; i < count; i++) {
       View child = getChildAt(i);
       LayoutParams params = (LayoutParams) child.getLayoutParams();
       int childWidth = (int) (usableWidth * (float) params.weight / mWeightTotal + 0.5f);
       int widthSpec = MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.EXACTLY);
-      int heightSpec = heightMeasureSpec;
+      int heightSpec = MeasureSpec.makeMeasureSpec(
+          MeasureSpec.getSize(heightMeasureSpec) - mTopBorder - mBottomBorder - getPaddingTop()
+              - getPaddingBottom(), MeasureSpec.getMode(heightMeasureSpec));
       if (params.height != LayoutParams.MATCH_PARENT
           && params.height != LayoutParams.WRAP_CONTENT) {
         heightSpec = MeasureSpec.makeMeasureSpec(params.height, MeasureSpec.EXACTLY);
       }
       child.measure(widthSpec, heightSpec);
-      maxChildHeight = Math.max(maxChildHeight, child.getMeasuredHeight());
+      maxChildHeight = Math.max(maxChildHeight,
+          child.getMeasuredHeight() + params.topMargin + params.bottomMargin);
     }
-    setMeasuredDimension(widthSize, maxChildHeight + mTopBorder + mBottomBorder);
+    setMeasuredDimension(mWSize,
+        maxChildHeight + mTopBorder + mBottomBorder + getPaddingTop() + getPaddingBottom());
   }
 
   @Override protected void onLayout(boolean changed, int l, int t, int r, int b) {
@@ -182,15 +219,17 @@ public class WeightView extends ViewGroup {
       int right;
       switch (params.gravity) {
         case LayoutParams.LEFT:
-          left = mLeftBorder;
+          left = getPaddingLeft() + params.leftMargin + mLeftBorder;
           right = left + childMWidth;
           break;
         case LayoutParams.RIGHT:
-          right = measuredWidth - mRightBorder;
+          right = measuredWidth - mRightBorder - getPaddingRight() - params.rightMargin;
           left = right - childMWidth;
           break;
         default:
-          left = ((measuredWidth - childMWidth - mLeftBorder - mRightBorder) / 2) + mLeftBorder;
+          left = ((measuredWidth - childMWidth - mLeftBorder - mRightBorder - getPaddingRight()
+              - getPaddingLeft() - params.leftMargin - params.rightMargin) / 2) + mLeftBorder
+              + getPaddingLeft();
           right = left + childMWidth;
           break;
       }
@@ -214,15 +253,17 @@ public class WeightView extends ViewGroup {
       int bottom;
       switch (params.gravity) {
         case LayoutParams.TOP:
-          top = mTopBorder;
+          top = mTopBorder + getPaddingTop() + params.topMargin;
           bottom = top + childMHeight;
           break;
         case LayoutParams.BOTTOM:
-          bottom = measuredHeight - mBottomBorder;
+          bottom = measuredHeight - mBottomBorder - getPaddingBottom() - params.bottomMargin;
           top = bottom - childMHeight;
           break;
         default:
-          top = ((measuredHeight - childMHeight - mTopBorder - mBottomBorder) / 2) + mTopBorder;
+          top = ((measuredHeight - childMHeight - mTopBorder - mBottomBorder - getPaddingBottom()
+              - getPaddingTop() - params.topMargin - params.bottomMargin) / 2) + mTopBorder
+              + getPaddingTop();
           bottom = top + childMHeight;
           break;
       }
@@ -240,7 +281,6 @@ public class WeightView extends ViewGroup {
   private void drawBorder(Canvas canvas) {
     int measuredWidth = getMeasuredWidth();
     int measuredHeight = getMeasuredHeight();
-
     mPaint.setColor(mBorderColor);
 
     if (mLeftBorder > 0) {
@@ -279,7 +319,9 @@ public class WeightView extends ViewGroup {
       for (int len = getChildCount(), i = 0; i < len; i++) {
         View child = getChildAt(i);
         int childRight = child.getRight();
-        boolean isRight = (childRight + mChildGap) == measuredWidth;
+        LayoutParams params = (LayoutParams) child.getLayoutParams();
+        boolean isRight =
+            (childRight + mChildGap + getPaddingRight() + params.rightMargin) == measuredWidth;
         if ((i == len - 1 && isRight) || child.getVisibility() == GONE) continue;
         mBorderPath.reset();
         mBorderPath.moveTo(childRight + (float) mChildGap / 2, mTopBorder);
@@ -289,8 +331,11 @@ public class WeightView extends ViewGroup {
     } else {
       for (int len = getChildCount(), i = 0; i < len; i++) {
         View child = getChildAt(i);
+        LayoutParams params = (LayoutParams) child.getLayoutParams();
         int childBottom = child.getBottom();
-        boolean isBottom = (mChildGap + childBottom) == measuredHeight;
+        boolean isBottom = Math.abs(
+            (mChildGap + childBottom + getPaddingBottom() + getPaddingTop() + params.bottomMargin)
+                - measuredHeight) <= 1;
         if ((i == len - 1 && isBottom) || child.getVisibility() == GONE) continue;
         mBorderPath.reset();
         mBorderPath.moveTo(mLeftBorder, childBottom + (float) mChildGap / 2);
@@ -313,7 +358,7 @@ public class WeightView extends ViewGroup {
   }
 
   //先忽略Margin
-  public static class LayoutParams extends ViewGroup.LayoutParams {
+  public static class LayoutParams extends MarginLayoutParams {
     private static final int CENTER = 0;
     private static final int TOP = 1;
     private static final int BOTTOM = 2;

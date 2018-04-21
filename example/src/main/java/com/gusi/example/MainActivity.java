@@ -3,7 +3,6 @@ package com.gusi.example;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +16,9 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    RecyclerView rcv = findViewById(R.id.rcv);
-    rcv.setLayoutManager(new LinearLayoutManager(this));
-    rcv.setAdapter(new Adapter());
+    //RecyclerView rcv = findViewById(R.id.rcv);
+    //rcv.setLayoutManager(new LinearLayoutManager(this));
+    //rcv.setAdapter(new Adapter());
   }
 
   class Adapter extends RecyclerView.Adapter<ViewHolder> {
