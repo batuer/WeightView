@@ -68,14 +68,16 @@
 
 
     <com.gusi.weight.WeightView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_margin="5dp"
         android:background="#22000000"
         app:border="5dp"
         app:border_color="#44000000"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/view_left"
         app:layout_constraintRight_toLeftOf="@+id/view_right"
+        app:layout_constraintTop_toTopOf="parent"
         app:orientation="vertical"
         app:weight_total="10">
 

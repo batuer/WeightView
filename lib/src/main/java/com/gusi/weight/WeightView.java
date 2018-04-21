@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -120,16 +119,7 @@ public class WeightView extends ViewGroup {
 
   private void measureVertical(int widthMeasureSpec, int heightMeasureSpec) {
     int count = getChildCount();
-    ViewGroup.LayoutParams shelfParams = getLayoutParams();
-
-    if (shelfParams.width == 0 && )
-
     int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-
-
-
-
-    Log.w("Fire", "WeightView:121行:" + heightSize + ":" + MeasureSpec.getSize(widthMeasureSpec));
     int usableHeight = heightSize - mTopBorder - mBottomBorder - (count - 1) * mChildGap;
     int maxChildWidth = 0;
     for (int i = 0; i < count; i++) {
@@ -137,7 +127,9 @@ public class WeightView extends ViewGroup {
       LayoutParams params = (LayoutParams) child.getLayoutParams();
       int childHeight = (int) (usableHeight * (float) params.weight / mWeightTotal + 0.5f);
       int heightSpec = MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.EXACTLY);
-      int widthSpec = widthMeasureSpec;
+      int widthSpec = MeasureSpec.makeMeasureSpec(
+          MeasureSpec.getSize(widthMeasureSpec) - mLeftBorder - mRightBorder,
+          MeasureSpec.getMode(widthMeasureSpec));
       if (params.width != LayoutParams.MATCH_PARENT && params.width != LayoutParams.WRAP_CONTENT) {
         widthSpec = MeasureSpec.makeMeasureSpec(params.width, MeasureSpec.EXACTLY);
       }
@@ -157,7 +149,9 @@ public class WeightView extends ViewGroup {
       LayoutParams params = (LayoutParams) child.getLayoutParams();
       int childWidth = (int) (usableWidth * (float) params.weight / mWeightTotal + 0.5f);
       int widthSpec = MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.EXACTLY);
-      int heightSpec = heightMeasureSpec;
+      int heightSpec = MeasureSpec.makeMeasureSpec(
+          MeasureSpec.getSize(heightMeasureSpec) - mTopBorder - mBottomBorder,
+          MeasureSpec.getMode(heightMeasureSpec));
       if (params.height != LayoutParams.MATCH_PARENT
           && params.height != LayoutParams.WRAP_CONTENT) {
         heightSpec = MeasureSpec.makeMeasureSpec(params.height, MeasureSpec.EXACTLY);
