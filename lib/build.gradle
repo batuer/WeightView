@@ -33,7 +33,7 @@ publish {
   userOrg = 'batuer'
   groupId = 'com.gusi'
   artifactId = 'WeightView'
-  publishVersion = '1.0.1'
+  publishVersion = '1.0.0'
   desc = 'This is an exercise program to study View of the drawing process'
   website = 'https://github.com/batuer/WeightView'
 }
